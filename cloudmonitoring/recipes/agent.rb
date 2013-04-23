@@ -17,6 +17,10 @@
 # limitations under the License.
 #
 
+# Make sure the "/var/chef/cache" directory exists on the server
+directory "/var/chef/cache" do
+  recursive true
+end
 
 cookbook_file "/var/chef/cache/get_entity.py" do
   source "get_entity.py"
@@ -28,7 +32,7 @@ end
 
 #Get the entity for this server based on IP address and set the agent_id to the hostname
 execute "get_entity" do
-  command "python /var/chef/cache/get_entity.py -u #{node['cloud_monitoring']['rackspace_username']} -a #{node['cloud_monitoring']['rackspace_api_key']} -r #{node['cloud_monitoring']['rackspace_auth_region']} -i #{node.ipaddress} -o #{node['cloud_monitoring']['agent']['id']}"      
+  command "python /var/chef/cache/get_entity.py -u #{node['cloud_monitoring']['rackspace_username']} -a #{node['cloud_monitoring']['rackspace_api_key']} -r #{node['cloud_monitoring']['rackspace_auth_region']} -i #{node.ipaddress} -o #{node['cloud_monitoring']['agent']['id']}"
   user "root"
 end
 
@@ -46,7 +50,7 @@ cookbook_file "/var/chef/cache/create_agent_token.py" do
   action :create
 end
 
-#Place Agent config file 
+#Place Agent config file
 template "/etc/rackspace-monitoring-agent.cfg" do
   source "rackspace-monitoring-agent.erb"
   owner "root"
@@ -60,7 +64,7 @@ end
 
 #Create an agent token and place it in the config file
 execute "create_token" do
-  command "TOKEN=`python /var/chef/cache/create_agent_token.py -u #{node['cloud_monitoring']['rackspace_username']} -a #{node['cloud_monitoring']['rackspace_api_key']} -r #{node['cloud_monitoring']['rackspace_auth_region']}` && sed -i \"s/monitoring_token ChangeMe/monitoring_token $TOKEN/g\" /etc/rackspace-monitoring-agent.cfg"      
+  command "TOKEN=`python /var/chef/cache/create_agent_token.py -u #{node['cloud_monitoring']['rackspace_username']} -a #{node['cloud_monitoring']['rackspace_api_key']} -r #{node['cloud_monitoring']['rackspace_auth_region']}` && sed -i \"s/monitoring_token ChangeMe/monitoring_token $TOKEN/g\" /etc/rackspace-monitoring-agent.cfg"
   user "root"
 end
 
@@ -73,7 +77,7 @@ service "rackspace-monitoring-agent" do
     supports :restart => true, :reload => true, :status => true
   end
   action [:enable, :start]
-  action [:restart]  
+  action [:restart]
 end
 
 cookbook_file "/var/chef/cache/create_check.py" do
@@ -86,6 +90,6 @@ end
 
 #Create Filesystem Check and Alarm
 execute "create_check" do
-  command "python /var/chef/cache/create_check.py -u #{node['cloud_monitoring']['rackspace_username']} -a #{node['cloud_monitoring']['rackspace_api_key']} -r #{node['cloud_monitoring']['rackspace_auth_region']} -i #{node.ipaddress} -p #{node['cloud_monitoring']['agent']['filesystem_period']} -t #{node['cloud_monitoring']['agent']['filesystem_timeout']}"      
+  command "python /var/chef/cache/create_check.py -u #{node['cloud_monitoring']['rackspace_username']} -a #{node['cloud_monitoring']['rackspace_api_key']} -r #{node['cloud_monitoring']['rackspace_auth_region']} -i #{node.ipaddress} -p #{node['cloud_monitoring']['agent']['filesystem_period']} -t #{node['cloud_monitoring']['agent']['filesystem_timeout']}"
   user "root"
 end

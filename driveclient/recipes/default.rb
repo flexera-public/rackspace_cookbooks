@@ -49,17 +49,18 @@ else
     end
   end
 
-  file node[:driveclient][:bootstrapfile] do
-    backup false
-    not_if "grep 'Registered' #{node[:driveclient][:bootstrapfile]} |grep 'true'"
-    action :delete
-  end
+#  file node[:driveclient][:bootstrapfile] do
+#    backup false
+#    not_if "grep 'Registered' #{node[:driveclient][:bootstrapfile]} |grep 'true'"
+#    action :delete
+#  end
 
   ruby_block "report_failed_registration" do
     block do
       raise "driveclient failed to register."
     end
-    not_if "test -f #{node[:driveclient][:bootstrapfile]}"
+    not_if "grep 'Registered' #{node[:driveclient][:bootstrapfile]} |grep 'true'"
+    #not_if "test -f #{node[:driveclient][:bootstrapfile]}"
   end
 
   case node[:platform]

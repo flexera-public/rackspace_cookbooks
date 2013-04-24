@@ -28,7 +28,6 @@ else
   service "driveclient" do
     supports :restart => true, :stop => true, :status => true
     action [:enable, :start]
-    #subscribes :restart, resources(:template => node[:driveclient][:bootstrapfile]), :immediately
   end
 
   template node[:driveclient][:bootstrapfile] do
@@ -49,18 +48,6 @@ else
     end
   end
 
-#  service "driveclient" do
-#    supports :restart => true, :stop => true, :status => true
-#    action [:enable, :start]
-#    subscribes :restart, resources(:template => node[:driveclient][:bootstrapfile]), :immediately
-#  end
-
-  ruby_block "log bootstrap file" do
-    block do
-      Chef::Log.info `cat #{node[:driveclient][:bootstrapfile]}`
-    end
-  end
-
   log "Sleeping #{node[:driveclient][:sleep]}s to wait for RCBU registration."
   ruby_block "Sleeping #{node[:driveclient][:sleep]}s" do
     block do
@@ -68,18 +55,17 @@ else
     end
   end
 
-#  file node[:driveclient][:bootstrapfile] do
-#    backup false
-#    not_if "grep 'Registered' #{node[:driveclient][:bootstrapfile]} |grep 'true'"
-#    action :delete
-#  end
+  file node[:driveclient][:bootstrapfile] do
+    backup false
+    not_if "grep 'Registered' #{node[:driveclient][:bootstrapfile]} |grep 'true'"
+    action :delete
+  end
 
   ruby_block "report_failed_registration" do
     block do
       raise "driveclient failed to register."
     end
-    not_if "grep 'Registered' #{node[:driveclient][:bootstrapfile]} |grep 'true'"
-    #not_if "test -f #{node[:driveclient][:bootstrapfile]}"
+    not_if "test -f #{node[:driveclient][:bootstrapfile]}"
   end
 
   case node[:platform]

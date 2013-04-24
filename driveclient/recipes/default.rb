@@ -42,12 +42,6 @@ else
     notifies :restart, resources(:service => "driveclient"), :immediately
   end
 
-  ruby_block "log bootstrap file" do
-    block do
-      Chef::Log.info `cat #{node[:driveclient][:bootstrapfile]}`
-    end
-  end
-
   log "Sleeping #{node[:driveclient][:sleep]}s to wait for RCBU registration."
   ruby_block "Sleeping #{node[:driveclient][:sleep]}s" do
     block do

@@ -36,10 +36,22 @@ else
     not_if "grep 'Registered' #{node[:driveclient][:bootstrapfile]} |grep 'true'"
   end
 
+  ruby_block "log bootstrap file" do
+    block do
+      Chef::Log.info `cat #{node[:driveclient][:bootstrapfile]}`
+    end
+  end
+
   service "driveclient" do
     supports :restart => true, :stop => true, :status => true
     action [:enable, :start]
     subscribes :restart, resources(:template => node[:driveclient][:bootstrapfile]), :immediately
+  end
+
+  ruby_block "log bootstrap file" do
+    block do
+      Chef::Log.info `cat #{node[:driveclient][:bootstrapfile]}`
+    end
   end
 
   log "Sleeping #{node[:driveclient][:sleep]}s to wait for RCBU registration."

@@ -27,7 +27,7 @@ else
 
   service "driveclient" do
     supports :restart => true, :stop => true, :status => true
-    action [:enable, :start]
+    action [:enable]
   end
 
   template node[:driveclient][:bootstrapfile] do

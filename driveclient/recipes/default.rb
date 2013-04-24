@@ -25,6 +25,12 @@ else
     action :upgrade
   end
 
+  service "driveclient" do
+    supports :restart => true, :stop => true, :status => true
+    action [:enable, :start]
+    #subscribes :restart, resources(:template => node[:driveclient][:bootstrapfile]), :immediately
+  end
+
   template node[:driveclient][:bootstrapfile] do
     source "bootstrap.json.erb"
     owner  "root"
@@ -34,6 +40,7 @@ else
       :setup => true
     )
     not_if "grep 'Registered' #{node[:driveclient][:bootstrapfile]} |grep 'true'"
+    notifies :restart, resources(:service => "driveclient"), :immediately
   end
 
   ruby_block "log bootstrap file" do
@@ -42,11 +49,11 @@ else
     end
   end
 
-  service "driveclient" do
-    supports :restart => true, :stop => true, :status => true
-    action [:enable, :start]
-    subscribes :restart, resources(:template => node[:driveclient][:bootstrapfile]), :immediately
-  end
+#  service "driveclient" do
+#    supports :restart => true, :stop => true, :status => true
+#    action [:enable, :start]
+#    subscribes :restart, resources(:template => node[:driveclient][:bootstrapfile]), :immediately
+#  end
 
   ruby_block "log bootstrap file" do
     block do

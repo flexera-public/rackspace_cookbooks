@@ -57,7 +57,7 @@ else
 
   ruby_block "report_failed_registration" do
     block do
-      Chef::Application.fatal!("driveclient failed to register.")
+      raise "driveclient failed to register."
     end
     not_if "test -f #{node[:driveclient][:bootstrapfile]}"
   end

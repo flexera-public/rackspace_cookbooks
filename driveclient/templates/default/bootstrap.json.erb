@@ -1,0 +1,11 @@
+{
+  "ApiHostName": "<%= node[:driveclient][:apihostname] %>",
+  "Username": "<%= node[:driveclient][:username] %>",
+<% if @setup %>
+  "Password": "<%= node[:driveclient][:password] %>",
+  "AgentKey": "",
+  "AccountId": "<%= node[:driveclient][:accountid] %>",
+<% end %>
+  "Https" : true,
+  "IsRegistered": false
+}

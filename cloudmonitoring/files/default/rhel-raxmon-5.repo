@@ -1,0 +1,7 @@
+[rhel-raxmon]
+name=Rackspace Monitoring
+baseurl=http://stable.packages.cloudmonitoring.rackspace.com/redhat-5-x86_64
+metadata_expire=1
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/signing-key-rhel5.asc

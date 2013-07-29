@@ -9,7 +9,7 @@
   },
   "dependencies": {
   },
-  "name": "managed-cloud-cloudmonitoring",
+  "name": "cloudmonitoring",
   "replacing": {
   },
   "recipes": {

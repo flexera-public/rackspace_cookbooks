@@ -5,7 +5,7 @@
   },
   "providing": {
   },
-  "name": "managed-cloud-driveclient",
+  "name": "driveclient",
   "suggestions": {
   },
   "version": "1.0.0",

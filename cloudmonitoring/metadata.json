@@ -13,8 +13,8 @@
   "replacing": {
   },
   "recipes": {
-    "cloudmonitoring::default", "Default recipe for cloudmonitoring.",
-    "cloudmonitoring::agent", "Agent."
+    "cloudmonitoring::default": "Default recipe for cloudmonitoring.",
+    "cloudmonitoring::agent": "Agent."
   },
   "suggestions": {
   },
